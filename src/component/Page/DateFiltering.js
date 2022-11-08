@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import useAllBookingInfo from '../Hooks/useAllBookingInfo';
 const dateFilterParams = {
   comparator: function (filterLocalDateAtMidnight, cellValue) {
     var dateAsString = cellValue;
@@ -28,16 +29,12 @@ const DateFiltering = () => {
   const [gridApi, setGridApi] = useState()
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const rowData = [
-    { alaka: "Dumni", model: "Celica", img: "https://dubaitrippackages.files.wordpress.com/2017/11/2-imgdinosaurs_base.jpg", price: 35000, date: "03-11-2022" },
-    { alaka: "Patira", model: "Mondeo", img: "https://dubaitrippackages.files.wordpress.com/2017/11/2-imgdinosaurs_base.jpg", price: 32000, date: "04-11-2022" },
-    { alaka: "Mostul", model: "Boxter", img: "https://dubaitrippackages.files.wordpress.com/2017/11/2-imgdinosaurs_base.jpg", price: 72000, date: "05-11-2022" },
-    { alaka: "Tolna", model: "Mers", img: "https://dubaitrippackages.files.wordpress.com/2017/11/2-imgdinosaurs_base.jpg", price: 92000, date: "06-11-2022" }
-  ];
+  const [allBooking] = useAllBookingInfo();
 
-  const columns = [{ headerName: "Alaka", field: "alaka" },
-  { headerName: "Price", field: "price" },
-  { headerName: "Model", field: "model" },
+
+  const columns = [{ headerName: "Name", field: "name" },
+  { headerName: "Phone", field: "phone" },
+  { headerName: "Address", field: "address" },
   { headerName: "Date", field: "date", filter: 'agDateColumnFilter', filterParams: dateFilterParams, }
   ]
   const defColumnDefs = { flex: 1, }
@@ -69,15 +66,20 @@ const DateFiltering = () => {
 
   }, [startDate, endDate])
   return (
-    <div >
-      <h2 className='text-red-700'>Booking</h2>
+    <div className='lg:mx-10'>
+      <h2 className='text-primary text-3xl font-bold text-center my-3'>Booking list </h2>
       <p align="center">Date Range Filtering </p>
       <div className="ag-theme-alpine" style={{ height: 500 }}>
-        From : <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} />
-        To : <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} />
+        <div className='flex'>
+          <p className='text-1xl mr-16 font-bold'> From : <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} />
+          </p>
+
+          <p className='text-1xl mr-10 font-bold'> To : <input type="date" className='' value={endDate} onChange={e => setEndDate(e.target.value)} />
+          </p>
+        </div>
         <AgGridReact
-          className='mt-10'
-          rowData={rowData}
+          className='mt-5'
+          rowData={allBooking}
           columnDefs={columns}
           defaultColDef={defColumnDefs}
           onGridReady={onGridReady} />

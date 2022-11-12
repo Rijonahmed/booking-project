@@ -26,7 +26,7 @@ const dateFilterParams = {
   browserDatePicker: true,
 };
 const DateFiltering = () => {
-  const [gridApi, setGridApi] = useState()
+  const [gridApi, setGridApi] = useState(null)
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [allBooking] = useAllBookingInfo();
@@ -65,11 +65,17 @@ const DateFiltering = () => {
     }
 
   }, [startDate, endDate])
+  const searchFilter = (e) => {
+    gridApi.api.setQuickFilter(e.target.value)
+  }
   return (
     <div className='lg:mx-10'>
       <h2 className='text-primary text-3xl font-bold text-center my-3'>Booking list </h2>
       <p align="center">Date Range Filtering </p>
-      <div className="ag-theme-alpine" style={{ height: 500 }}>
+
+      <div className='flex justify-between items-center'>
+
+        <input type="search" placeholder="Search..." className="input input-bordered input-info w-full max-w-xs my-3" onChange={searchFilter} />
         <div className='flex'>
           <p className='text-1xl mr-16 font-bold'> From : <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} />
           </p>
@@ -77,6 +83,13 @@ const DateFiltering = () => {
           <p className='text-1xl mr-10 font-bold'> To : <input type="date" className='' value={endDate} onChange={e => setEndDate(e.target.value)} />
           </p>
         </div>
+      </div>
+
+      <div className="ag-theme-alpine" style={{ height: 500 }}>
+
+
+
+
         <AgGridReact
           className='mt-5'
           rowData={allBooking}
@@ -84,6 +97,10 @@ const DateFiltering = () => {
           defaultColDef={defColumnDefs}
           onGridReady={onGridReady} />
       </div>
+
+
+
+
 
     </div>
   );
